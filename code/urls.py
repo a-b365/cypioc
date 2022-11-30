@@ -1,4 +1,4 @@
-app_name = 'wildlife'
+app_name = 'code'
 from django.urls import path
 from . import views
 urlpatterns = [ 

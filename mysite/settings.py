@@ -16,7 +16,7 @@ SECRET_KEY='django-insecure-98io0^4p!z+31rvzzc^%y9u1=m(me^!u=$5ib-9t#5q2j&!o(z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['samrakxad.herokuapp.com','127.0.0.1','0.0.0.0','localhost']
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','localhost']
 
 
 # Application definition
@@ -131,4 +131,4 @@ STATICFILES_DIRS=[
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-CSRF_TRUSTED_ORIGINS = ['https://samrakxad.herokuapp.com']
+#CSRF_TRUSTED_ORIGINS = ['https://samrakxad.herokuapp.com']
