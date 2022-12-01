@@ -76,7 +76,7 @@
                                 <br/>
                                 <input type="file" id="file-ip-1" name="animal" accept="image/*" onchange="showPreview(event);">
                                 
-                                <label for="file-upload" >Classify Image</label>
+                                <label for="file-upload" >Colorize</label>
                                 <input  type="submit" value="submit" id="file-upload">
                                 
                         </div>
@@ -87,35 +87,34 @@
     </div>
 
 
-    {%if animal_result%}
+   
     <div class="container mt-5" style="margin-bottom: 20px; padding: 20px 0px;">
         <div class="row text-center">
             <h1 class=" text-center p-0" role="alert" style="color: #EFFFC8; margin-bottom: 20px;">Following Results Are Obtained</h1>
                                     
-                {%for animal in animal_result%}
+                
                 <details style="color: #EFFFC8;">
                     <summary>
-                      {{animal.name}}
+                      
                     </summary>
                     <p>
-                      {{animal.desc}}
+                      
                     </p>
                     <p>
-                        percentage: {{animal.percentage}}
+                      
                     </p>
                   </details>
 
-                {%endfor%}
+                
             
         </div>
     </div>
-   {%endif%}
    
 
 
-    {%if animal_img%}
+    {%if colored_img%}
         <div style=" border:200px solid blue; text-align:center">
-            <img  src="data:image/png;base64,{{animal_img}}" style="width: 100%;" alt="...">
+            <img  src="data:image/png;base64,{{colored_img}}" style="width: 100%;" alt="...">
         </div>
     {%endif%}
         

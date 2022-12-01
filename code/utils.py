@@ -1,13 +1,15 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import os.path
+import base64
 import numpy as np
 from skimage.color import rgb2lab, lab2rgb
 from skimage.transform import resize
 from sklearn.metrics import confusion_matrix
 from skimage.io import imsave,imshow
-from colorizer import dlModel
+from .colorizer import dlModel
 from keras.models import Sequential
+import cv2
 
 
 def preprocess(path):
@@ -57,14 +59,14 @@ def CompileModel(optimizer,loss):
 
 	model = dlModel((224,224,1))
 	X,Y = cvrt2lab()
-	model.compile(optimizer=optimizer, loss=loss , metrics=['accuracy'])
+	model.compile(optimizer="adam", loss="mse" , metrics=['accuracy'])
 	history = model.fit(X,Y,epochs=100,batch_size=24)
 	performanceGraph(history) #Creates performanceGraph
 	model.save('models/plaincnn.h5')
 
 def loadModel():
 	model = Sequential()
-	model.load_model('models/plaincnn.h5',compile=True)
+	model.load_model('../models/plaincnn.h5',compile=True)
 	return model
 
 def cvrt2rgb():
@@ -76,12 +78,13 @@ def cvrt2rgb():
 	img1_color.append(img1)
 	img1_color = np.array(img1_color, dtype= float)
 	img1_color = rgb2lab(1.0/255*img1_color)[:,:,:,0]
-
 	img1_color = img1_color.reshape(img1_color.shape+(1, ))
 	output1 = model.predict(img1_color)
 	output1 = output1*128
 	result = np.zeros((224, 224, 3))
 	result[:,:,0] = img1_color[0][:,:,0]
 	result[:,:,1:] = output1[0]
-	imshow(lab2rgb(result))
-	imsave("landscapes/results/00000000.jpg", lab2rgb(result))
+	vis2 = cv2.cvtColor(result[:,:,1:], cv2.COLOR_GRAY2BGR)
+	_, buffer = cv2.imencode('.png', )
+	result = base64.b64encode(buffer).decode('utf-8')
+	return result

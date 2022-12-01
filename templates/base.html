@@ -64,12 +64,23 @@
 			<div class="card">
 				<h5>COLORIZE YOUR IMAGE</h5>
 				<div class="pra">
-					<form >
-						<input type="file" id="img" name="img" accept="image/*">
-					  </form>
-					<p style="text-align: center;">
-						<a class="button" href="#">Colorize</a>
-					</p>
+					<form method="POST" action="{% url 'code:homepage'%}" enctype="multipart/form-data" id="img-submit-form">
+                        {%csrf_token%}
+                        <div class="form-input">
+                            <div class="preview">
+                                {%if validation_error%}
+                                    <p class="text-center text-danger">{{validation_error}}</p>
+                                {%endif%}
+                            <img id="file-ip-1-preview">
+                            </div>
+                                <label for="file-ip-1">Upload Image</label>
+                                <br/>
+                                <input type="file" id="file-ip-1" name="animal" accept="image/*" onchange="showPreview(event);">
+                              
+								<input  type="submit" value="Colorize" id="file-upload">
+                                <label for="file-upload" >Colorize</label>        
+                        </div>
+                    </form>
 				</div>
 			</div>
 			
