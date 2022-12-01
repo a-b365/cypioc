@@ -21,7 +21,11 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
-    <script src="{%static 'js/wildlife/imgupload.js'%}"></script>
+    <script>
+	function redirect(){
+		window.scrollTo(0,1500);
+	}
+	</script>
     
     
 </head>
@@ -30,17 +34,19 @@
   <nav>
 		<h2 class="logo">Image <span>Colorizer</span></h2>
 	</nav>
+	<div class="bgimg">
+		<div class="hero">
+			
 
-	<div class="hero">
-		
-
-		<div class="content">
-			<!-- <h3>Colorize your pictures with a click of a button</h3> -->
+			<div class="content">
+				<h3>Bring your Images to Life <br/>
+					<button class="btn btn-primary" onclick="redirect()">Get Started</button>
+				</h3> 
 			</div>
-		</div>
 
-		<div class="hero-image">
-			<img class="img" src="{% static 'images/bg-image.jpg'%}">
+			<!-- <div class="hero-image">
+				<img class="img" src="{% static 'images/bg-image.jpg'%}"> 
+			</div>  -->
 		</div>
 	</div>
 
@@ -55,7 +61,7 @@
 	</section>
 
 	<!-----service section start----------->
-	<div class="service">
+	<div class="service" id="reee">
 		<div class="title">
 			<h2>Get Started</h2>
 		</div>
