@@ -177,7 +177,7 @@ button:hover{
 	color: aliceblue;
 	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   }
-  
+
 .box{
 	display: flex;
 	justify-content: center;
@@ -189,7 +189,10 @@ button:hover{
 	width: 335px;
 	padding: 20px 35px;
 	background: #191919;
+	border-style: solid;
 	border-radius: 20px;
+	border-color: #f9004d;
+	border-width: medium;
 	margin: 15px;
 	position: relative;
 	overflow: hidden;
