@@ -1,60 +1,87 @@
-import numpy as np
-import argparse
-import glob
-import cv2
-import os
-import pickle
+import tensorflow as tf
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-#from pyimagesearch import imutils
-#from skimage import exposure
+import os.path
+import numpy as np
+from skimage.color import rgb2lab, lab2rgb
+from skimage.transform import resize
+from sklearn.metrics import confusion_matrix
+from skimage.io import imsave,imshow
+from colorizer import dlModel
+from keras.models import Sequential
 
-def unpickle(file):
-    with open(file, 'rb') as fo:
-        dict = pickle.load(fo)
-    return dict
 
-def load_databatch(data_path, idx, img_size):
-	data_file = os.path.join(data_path, 'train_data_batch_')
-	
-	d = unpickle(data_file + str(idx))
-	x = d['data']
-	y = d['labels']
-	mean_image = d['mean']
+def preprocess(path):
+	augs_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale = 1. / 255, validation_split=0.1)
+	train = augs_datagen.flow_from_directory(path,target_size=(224,224),batch_size=24,class_mode=None,shuffle=True,subset='training')
+	return train
 
-	x = x/np.float32(255)	
-	mean_image = mean_image/np.float32(255)
+def cvrt2lab():
+	X =[]
+	Y =[]
+	for img in preprocess('../../landscapes/')[0]:
+		try:
+			lab = rgb2lab(img)
+			X.append(lab[:,:,0])
+			Y.append(lab[:,:,1:]/128)
+		except:
+			print('Error Occured while converting RGB to LAB color space.')
 
-    # Labels are indexed from 1, shift it so that indexes start at 0
-	y = [i-1 for i in y]
-	data_size = x.shape[0]
+	X = np.array(X)
+	Y = np.array(Y)
+	X = X.reshape(X.shape+(1,))
+	return X,Y
 
-	#x -= mean_image
-
-	img_size2 = img_size * img_size
-
-	x = np.dstack((x[:, :img_size2], x[:, img_size2:2*img_size2], x[:, 2*img_size2:]))
-	x = x.reshape((x.shape[0], img_size, img_size, 3)).transpose(0, 3, 1, 2)
-
-    # create mirrored images
-	X_train_rgb = x[0:data_size, :, :, :]
-	Y_train = y[0:data_size]
-	X_train_rgb_flip = X_train_rgb[:, :, :, ::-1]
-	Y_train_flip = Y_train
-	X_train_rgb = np.concatenate((X_train_rgb, X_train_rgb_flip), axis=0)
-	Y_train = np.concatenate((Y_train, Y_train_flip), axis=0)
-	return np.swapaxes(np.swapaxes(X_train_rgb,1,2),2,3), Y_train, mean_image
-	'''return dict(
-        X_train_rgb=X_train_rgb,#=lasagne.utils.floatX(X_train_rgb),
-        Y_train=Y_train,#=Y_train.astype('int32'),
-        mean=mean_image)'''
+def performanceGraph(history):
     
-def preprocess_image(pic): #Input picture must be in RGB
-	#pic_grey = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY) #grayscale
-	pic_lab = cv2.cvtColor(pic, cv2.COLOR_BGR2LAB) #LAB
-	#pic_l = pic_l - np.mean(pic_l) #Remove the mean
-	return pic_lab
-	
-def postprocess_image(pic): #Input must be LUV
-	pic_rgb = cv2.cvtColor(pic, cv2.COLOR_LAB2BGR)	
-	return pic_rgb
+    accuracy = history.history['accuracy']
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    val_accuracy = history.history['val_accuracy']
+    
+    epochs_range=range(10)
+
+    plt.subplot(1, 2, 1)
+    plt.plot(epochs_range, accuracy, label='Training Accuracy')
+    plt.plot(epochs_range, val_accuracy, label='Validation Accuracy')
+    plt.legend(loc='lower right')
+    plt.title('Training and Validation Accuracy')
+
+    plt.subplot(1, 2, 2)
+    plt.plot(epochs_range, loss, label='Training Loss')
+    plt.plot(epochs_range, val_loss, label='Validation Loss')
+    plt.legend(loc='upper right')
+    plt.title('Training and Validation Loss')
+    plt.show()
+
+def CompileModel(optimizer,loss):
+
+	model = dlModel((224,224,1))
+	X,Y = cvrt2lab()
+	model.compile(optimizer=optimizer, loss=loss , metrics=['accuracy'])
+	history = model.fit(X,Y,epochs=100,batch_size=24)
+	performanceGraph(history) #Creates performanceGraph
+	model.save('models/plaincnn.h5')
+
+def loadModel():
+	model = Sequential()
+	model.load_model('models/plaincnn.h5',compile=True)
+	return model
+
+def cvrt2rgb():
+	#Test the Grayscale Image
+	model = loadModel()
+	img1_color=[]
+	img1 = tf.keras.utils.img_to_array(tf.keras.utils.load_img('landscapes/test/download.jpg'))
+	img1 = resize(img1 ,(224,224))
+	img1_color.append(img1)
+	img1_color = np.array(img1_color, dtype= float)
+	img1_color = rgb2lab(1.0/255*img1_color)[:,:,:,0]
+
+	img1_color = img1_color.reshape(img1_color.shape+(1, ))
+	output1 = model.predict(img1_color)
+	output1 = output1*128
+	result = np.zeros((224, 224, 3))
+	result[:,:,0] = img1_color[0][:,:,0]
+	result[:,:,1:] = output1[0]
+	imshow(lab2rgb(result))
+	imsave("landscapes/results/00000000.jpg", lab2rgb(result))
