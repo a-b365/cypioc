@@ -79,13 +79,11 @@
                                 {%endif%}
                             <img id="file-ip-1-preview">
                             </div>
-                                <label for="file-ip-1">Upload Image</label>
                                 <br/>
                                 <input type="file" id="file-ip-1" name="animal" accept="image/*" onchange="showPreview(event);">
                               
-								<input  type="submit" value="Colorize" id="file-upload">
-                                <label for="file-upload" >Colorize</label>        
-                        </div>
+								<input  type="submit" value="Colorize" id="file-upload" class="button">
+							</div>
                     </form>
 				</div>
 			</div>
@@ -93,10 +91,18 @@
 		</div>
 	</div>
 
+	{%if colored_img%}
+	<div style=" border:200px solid blue; text-align:center">
+		<img  src="data:image/png;base64,{{colored_img}}" style="width: 100%;" alt="...">
+	</div>
+	{%endif%}
+
+
 	<!------footer start--------->
 	<footer>
 		<p class="end">© Image Colorizer 2022</p>
 	</footer>
+
 
 
       
