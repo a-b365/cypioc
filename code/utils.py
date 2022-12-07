@@ -1,15 +1,11 @@
-import tensorflow as tf
-import matplotlib.pyplot as plt
-import os.path
 import base64
 import numpy as np
+import io
+import tensorflow as tf
+import matplotlib.pyplot as plt
 from skimage.color import rgb2lab, lab2rgb
 from skimage.transform import resize
-from sklearn.metrics import confusion_matrix
-from skimage.io import imsave,imshow
 from .colorizer import dlModel
-from keras.models import Sequential
-import cv2
 
 
 def preprocess(path):
@@ -55,19 +51,21 @@ def performanceGraph(history):
     plt.title('Training and Validation Loss')
     plt.show()
 
-def CompileModel(optimizer,loss):
+def CompileModel(modelName):
 
 	model = dlModel((224,224,1))
 	X,Y = cvrt2lab()
 	model.compile(optimizer="adam", loss="mse" , metrics=['accuracy'])
 	history = model.fit(X,Y,epochs=100,batch_size=24)
 	performanceGraph(history) #Creates performanceGraph
-	model.save('models/plaincnn.h5')
+	model.save(modelName)
 
+def loadModel(modelName):
+	return tf.keras.models.load_model(modelName,compile=True)
 
 def cvrt2rgb(filepath):
 	#Test the Grayscale Image
-	model = tf.keras.models.load_model('../models/plaincnn.h5',compile=True)
+	model = loadModel('../models/plaincnn.h5')
 	img1_color=[]
 	img1 = tf.keras.utils.img_to_array(tf.keras.utils.load_img(filepath))
 	img1 = resize(img1 ,(224,224))
@@ -80,9 +78,10 @@ def cvrt2rgb(filepath):
 	result = np.zeros((224, 224, 3))
 	result[:,:,0] = img1_color[0][:,:,0]
 	result[:,:,1:] = output1[0]
-	img1 = tf.keras.utils.array_to_img(result[:,:,1:])
-	img1.show()
-	#vis2 = cv2.cvtColor(result[:,:,1:], cv2.COLOR_GRAY2BGR)
-	#_, buffer = cv2.imencode('.png', )
-	#result = base64.b64encode(buffer).decode('utf-8')
-	#return result
+	img2_color = lab2rgb(result)
+	img2 = tf.keras.utils.array_to_img(img2_color) #Returns a PIL Image Instance
+	buffer = io.BytesIO() #Creates a memory buffer
+	img2.save(buffer,format='JPEG') #Saves the image in buffer with supportable formats
+	byte_im = buffer.getvalue()
+	result = base64.b64encode(byte_im).decode('utf-8') #b64 encoding
+	return result

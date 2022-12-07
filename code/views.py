@@ -14,10 +14,10 @@ class ImageUploadView(View):
         return render(request,'base.html')
     
     def post(self,request):
-        print("Hello")
+        
         if not request.FILES.get('animal'):
             context = {'validation_error':'Image is required'}
-            return render(request,'colorizer/home.html',context)
+            return render(request,'base.html',context)
         file_url = upload_file(request.FILES.get('animal'))
         colored_img = cvrt2rgb(file_url)
    

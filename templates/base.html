@@ -1,53 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {%load static%}
-    <title>Image Colorizer</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{%load static%}
+	<title>Image Colorizer</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="/static/js/wildlife/imgupload.js"></script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Amatic+SC&family=Kdam+Thmor+Pro&family=Roboto:wght@500&display=swap');
+	</style>
 
-    </style>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+		rel="stylesheet">
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+		integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
-    <script>
-	function redirect(){
-		window.scrollTo(0,1500);
-	}
+	<script>
+		function redirect() {
+			window.scrollTo(0, 1500);
+		}
 	</script>
-    
-    
+
+
 </head>
+
 <body>
-    
-  <nav>
+
+	<nav>
 		<h2 class="logo">Image <span>Colorizer</span></h2>
 	</nav>
 	<div class="bgimg">
 		<div class="hero">
-			
 
 			<div class="content">
-				<h3>Bring your Images to Life <br/>
+				<h3>Bring your Images to Life <br />
 					<button class="btn btn-primary" onclick="redirect()">Get Started</button>
-				</h3> 
+				</h3>
 			</div>
 
 			<!-- <div class="hero-image">
 				<img class="img" src="{% static 'images/bg-image.jpg'%}"> 
 			</div>  -->
 		</div>
+
 	</div>
 
 	<!----About section start---->
@@ -55,47 +61,55 @@
 		<div class="main">
 			<div class="about-text">
 				<h2>How it Works?</h2>
-				<p>Our model follows the Plain CNN architecture. The network is made of stacked convolutional layers. The figure gives the general overview of our network. Each block seen in the figure is composed of two to three convolutional layers followed by a rectified-linear activation unit. Between blocks, a batch normalization layer is inserted to help prevent exploding or vanishing gradient problems and speed up convergence.</p>
+				<p>Our model follows the Plain CNN architecture. The network is made of stacked convolutional
+					layers. The figure gives the general overview of our network. Each block seen in the figure
+					is
+					composed of two to three convolutional layers followed by a rectified-linear activation
+					unit.
+					Between blocks, a batch normalization layer is inserted to help prevent exploding or
+					vanishing
+					gradient problems and speed up convergence.</p>
+				<p></p>
+				
+				<a href="https://github.com/a-b365/ImageColorization" class="external-link">See our github for more details - https://github.com/a-b365/ImageColorization</a>
 			</div>
 		</div>
 	</section>
 
 	<!-----service section start----------->
-	<div class="service" >
+	<div class="service">
 		<div class="title">
 			<h2>Get Started</h2>
 		</div>
 
 		<div class="box">
+			<h5>COLORIZE YOUR IMAGE</h5>
 			<div class="card">
-				<h5>COLORIZE YOUR IMAGE</h5>
-				<div class="pra">
-					<form method="POST" action="{% url 'code:homepage'%}" enctype="multipart/form-data" id="img-submit-form">
-                        {%csrf_token%}
-                        <div class="form-input">
-                            <div class="preview">
-                                {%if validation_error%}
-                                    <p class="text-center text-danger">{{validation_error}}</p>
-                                {%endif%}
-                            <img id="file-ip-1-preview">
-                            </div>
-                                <br/>
-                                <input type="file" id="file-ip-1" name="animal" accept="image/*" onchange="showPreview(event);">
-                              
-								<input  type="submit" value="Colorize" id="file-upload" class="button">
-							</div>
-                    </form>
-				</div>
+		
+				<form method="POST" action="{% url 'code:homepage'%}" enctype="multipart/form-data" id="img-submit-form">
+					{%csrf_token%}
+					<div class="form-input">
+						<div class="preview">
+							{%if validation_error%}
+							<p class="text-center text-danger">{{validation_error}}</p>
+							{%endif%}
+							<img id="file-ip-1-preview">
+							{%if colored_img%}
+							<img src="data:image/jpg;base64,{{colored_img}}" id="file-ip-1-result">
+							{%endif%}
+						</div>
+		
+						<input type="file" id="file-ip-1" name="animal" accept="image/*" onchange="showPreview(event);hideElement('file-ip-1-result')">
+						<input type="submit" value="Colorize" id="file-upload" class="button" onclick="hideElement('file-ip-1-preview')">
+		
+					</div>
+				</form>
+		
 			</div>
-			
+		
 		</div>
-	</div>
+		</div>
 
-	{%if colored_img%}
-	<div style=" border:200px solid blue; text-align:center">
-		<img  src="data:image/png;base64,{{colored_img}}" style="width: 100%;" alt="...">
-	</div>
-	{%endif%}
 
 
 	<!------footer start--------->
@@ -105,11 +119,12 @@
 
 
 
-      
-    <!-- {%block content%}
+
+	<!-- {%block content%}
       {%block team_members%}{%endblock%}
     {%endblock content%}
     
     {%block footer%}{%endblock%} -->
 </body>
+
 </html>
