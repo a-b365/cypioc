@@ -1,4 +1,4 @@
-#cypioc(color your pictures in on click)
+# ***cypioc (color your pictures in on click)***
 How It Works?
 
 Our model follows the Plain CNN architecture. The network is made of stacked convolutional layers. Each block seen in the figure is composed of two to three convolutional layers followed by a rectified-linear activation unit. Between blocks, a batch normalization layer is inserted to help prevent exploding or vanishing gradient problems and speed up convergence.
